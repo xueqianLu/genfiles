@@ -46,10 +46,13 @@ func generateFile(name string, size int) error {
 	return nil
 }
 
-func randomFile(count, size int) {
+func randomFile(count, size int, prefix string) {
 	wg := sync.WaitGroup{}
 	for i := 0 ; i < count; i++ {
 		fname := fmt.Sprintf("random_%d.txt", i)
+		if len(prefix) > 0 {
+			fname = fmt.Sprintf("%s_%s", prefix, fname)
+		}
 		wg.Add(1)
 		go func(){
 			defer wg.Done()
@@ -62,6 +65,7 @@ func randomFile(count, size int) {
 func main() {
 	count := flag.Int("n", 1,"random files count")
 	size  := flag.Int("s", 1000, "random files size")
+	prefix := flag.String("p","","files prefix name")
 	flag.Parse()
-	randomFile(*count, *size)
+	randomFile(*count, *size, *prefix)
 }
